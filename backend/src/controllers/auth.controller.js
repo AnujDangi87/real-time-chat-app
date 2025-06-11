@@ -1,6 +1,6 @@
-import User from "../models/user.model";
+import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import { generateToken } from "../lib/utils";
+import { generateToken } from "../lib/utils.js";
 
 export const signup = async (req, res) => {
     const { fullName, email, password } = req.body;
@@ -23,7 +23,7 @@ export const signup = async (req, res) => {
 
         //hash password using bcrypt.js it is like using md5(message digest 5)
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
         const newUser = new User({
             fullName: fullName,
@@ -38,7 +38,7 @@ export const signup = async (req, res) => {
             await newUser.save();
 
             //status code of 201 something new have been created
-            res.sendStatus(201).json({
+            res.status(201).json({
                 _id: newUser._id,
                 fullName: newUser.fullName,
                 email: newUser.email,
@@ -91,6 +91,29 @@ export const login = async (req, res) => {
         res.status(500).json({message: "Internal Server Error"});
     }
 };
-export const logout = (req, res) => {
-    res.send("Logout route");
+export const logout = async (req, res) => {
+    try
+    {
+        res.cookie("jwt", "", {maxAge:0});
+        res.status(200).json({message: "Logged out successfully"});
+    }
+    catch(error)
+    {
+        console.log("Error in logout controller", error.message);
+        res.status(500).json({message: "Internal Server Error"});
+    }
 };
+
+export const updateProfile = async (req, res) => {
+    try
+    {
+        const {profilePic} = req.body;
+
+        const user = await User.updateOne()
+    }
+    catch(error)
+    {
+        console.log("Error in update profile controller", error.message);
+        res.status(500).json({message : "Internal Server Error"});
+    }
+}
