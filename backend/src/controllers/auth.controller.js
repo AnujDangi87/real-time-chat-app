@@ -107,7 +107,7 @@ export const logout = async (req, res) => {
 export const updateProfile = async (req, res) => {
     try
     {
-        const {profilePic} = req.body;
+        const { _id, fullName, email } = req.body;
 
         const user = await User.updateOne()
     }
