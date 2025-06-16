@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 
 import { connectDB } from "./lib/db.js";
 import authRoutes from "./routes/auth.route.js";
+import messageRoutes from "./routes/message.route.js";
 
 //config dotenv
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(cookieParser());
 
 //authorization routes -> signup, login, logout
 app.use("/api/auth", authRoutes);
+app.use("/api/message", messageRoutes)
 
 //listening on port 
 app.listen(PORT, () => {
